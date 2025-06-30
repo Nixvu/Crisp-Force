@@ -128,9 +128,14 @@ function getStatusBadgeClass($status)
                                         <td class="px-6 py-4 text-sm text-slate-500"><?= htmlspecialchars($c['marketing_name']) ?></td>
                                         <td class="px-6 py-4 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getStatusBadgeClass($c['status']) ?>"><?= ucfirst(str_replace('_', ' ', $c['status'])) ?></span></td>
                                         <td class="px-6 py-4 text-center text-sm">
-                                            <button onclick='reviewCampaign(<?= htmlspecialchars(json_encode($a), ENT_QUOTES, 'UTF-8') ?>)' class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none" title="Review Kampanye">
-                                                <i data-lucide="search-check" class="w-4 h-4"></i>
-                                            </button>
+                                            <div class="flex justify-center space-x-2">
+                                                <button onclick='viewCampaignDetails(<?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)' class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700" title="Lihat Detail">
+                                                    <i data-lucide="eye" class="w-4 h-4"></i>
+                                                </button>
+                                                <a href="../actions/proses_kampanye.php?action=delete&id=<?= $c['id_campaign'] ?>" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700" onclick="return confirm('Yakin hapus kampanye ini?')" title="Hapus Kampanye">
+                                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endwhile;
@@ -348,41 +353,63 @@ function getStatusBadgeClass($status)
     </div>
 </div>
 
-<?php include '../../includes/footer.php'; ?>
-
-<style>
-    /* Style untuk tab agar konsisten dengan halaman Perbaikan */
-    .tab-button {
-        border-color: transparent;
-        color: #64748b;
-        /* text-slate-500 */
-    }
-
-    .tab-button:hover {
-        border-color: #cbd5e1;
-        /* border-slate-300 */
-        color: #334155;
-        /* text-slate-700 */
-    }
-
-    .tab-button.active {
-        border-color: #3b82f6;
-        /* border-blue-500 */
-        color: #2563eb;
-        /* text-blue-600 */
-    }
-
-    .tab-button .lucide {
-        color: #94a3b8;
-        /* text-slate-400 */
-    }
-
-    .tab-button:hover .lucide,
-    .tab-button.active .lucide {
-        color: #2563eb;
-        /* text-blue-600 */
-    }
-</style>
+<!-- Campaign Details Modal (for view-only) -->
+<div class="fixed inset-0 overflow-y-auto hidden" id="campaignDetailsModal" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-slate-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <h3 class="text-xl leading-6 font-bold text-slate-900">Detail Kampanye</h3>
+                <div class="mt-4 border-t border-b border-slate-200 divide-y divide-slate-200">
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Nama Kampanye</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_nama_kampanye"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Subjek</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_subjek"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Konten / Deskripsi</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap" id="detail_deskripsi"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Jenis Kampanye</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_jenis_kampanye"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Target Segmentasi</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_target_segmentasi"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Tanggal Mulai</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_tanggal_mulai"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Dibuat Oleh</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_marketing_name"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="text-sm font-medium text-slate-500">Status</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_status"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4" id="detail_approved_by_row">
+                        <dt class="text-sm font-medium text-slate-500">Disetujui Oleh</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2" id="detail_approver_name"></dd>
+                    </div>
+                    <div class="py-3 sm:grid sm:grid-cols-3 sm:gap-4" id="detail_rejection_reason_row">
+                        <dt class="text-sm font-medium text-slate-500">Alasan Ditolak</dt>
+                        <dd class="mt-1 text-sm text-slate-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap" id="detail_rejection_reason"></dd>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-slate-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-slate-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-slate-700 hover:bg-slate-50 sm:mt-0 sm:w-auto sm:text-sm" onclick="closeModal('campaignDetailsModal')">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     lucide.createIcons();
@@ -449,6 +476,36 @@ function getStatusBadgeClass($status)
         };
     }
 
+    // --- Campaign Details View Logic (for all campaigns tab) ---
+    function viewCampaignDetails(campaign) {
+        document.getElementById('detail_nama_kampanye').innerText = campaign.nama_kampanye;
+        document.getElementById('detail_subjek').innerText = campaign.subjek || '-';
+        document.getElementById('detail_deskripsi').innerText = campaign.deskripsi || '-';
+        document.getElementById('detail_jenis_kampanye').innerText = campaign.jenis_kampanye.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        document.getElementById('detail_target_segmentasi').innerText = campaign.target_segmentasi.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        document.getElementById('detail_tanggal_mulai').innerText = new Date(campaign.tanggal_mulai).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('detail_marketing_name').innerText = campaign.marketing_name;
+        document.getElementById('detail_status').innerText = campaign.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        // Show/hide approver and rejection reason based on status
+        const approvedByRow = document.getElementById('detail_approved_by_row');
+        const rejectionReasonRow = document.getElementById('detail_rejection_reason_row');
+
+        if (campaign.status === 'aktif') {
+            document.getElementById('detail_approver_name').innerText = campaign.approver_name || '-';
+            approvedByRow.classList.remove('hidden');
+            rejectionReasonRow.classList.add('hidden');
+        } else if (campaign.status === 'ditolak') {
+            document.getElementById('detail_rejection_reason').innerText = campaign.rejection_reason || '-';
+            approvedByRow.classList.add('hidden');
+            rejectionReasonRow.classList.remove('hidden');
+        } else {
+            approvedByRow.classList.add('hidden');
+            rejectionReasonRow.classList.add('hidden');
+        }
+
+        openModal('campaignDetailsModal');
+    }
 
     // --- Template Logic ---
     function resetTemplateForm() {

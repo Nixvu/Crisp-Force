@@ -125,3 +125,19 @@ if ($action == 'reject' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: ../marketing/kampanye.php?tab=approval");
     exit();
 }
+
+// ACTION: Delete Campaign (Soft Delete)
+if ($action == 'delete' && isset($_GET['id'])) {
+    $id_campaign = (int)$_GET['id'];
+
+    $stmt = $conn->prepare("UPDATE Campaign SET deleted_at = NOW() WHERE id_campaign = ?");
+    $stmt->bind_param("i", $id_campaign);
+
+    if ($stmt->execute()) {
+        $_SESSION['success_message'] = "Kampanye berhasil dihapus.";
+    } else {
+        $_SESSION['error_message'] = "Gagal menghapus kampanye.";
+    }
+    header("Location: ../marketing/kampanye.php");
+    exit();
+}

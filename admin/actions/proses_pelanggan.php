@@ -22,9 +22,10 @@ if ($action == 'add_customer' && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt_user->execute();
         $id_user = $stmt_user->insert_id;
 
-        // 2. Insert ke tabel Customer dengan origin manual
-        $stmt_customer = $conn->prepare("INSERT INTO Customer (id_user, origin) VALUES (?, 'manual_input')");
-        $stmt_customer->bind_param("i", $id_user);
+        // 2. Insert ke tabel Customer dengan origin manual dan segmentasi
+        $segmentasi = sanitize($_POST['segmentasi']);
+        $stmt_customer = $conn->prepare("INSERT INTO Customer (id_user, origin, segmentasi) VALUES (?, 'manual_input', ?)");
+        $stmt_customer->bind_param("is", $id_user, $segmentasi);
         $stmt_customer->execute();
 
         $conn->commit();

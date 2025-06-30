@@ -44,28 +44,39 @@ if ($action == 'edit_user' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $no_hp = sanitize($_POST['no_hp']);
     $role = sanitize($_POST['role']);
 
-    // Cegah admin mengubah role-nya sendiri jika dia satu-satunya admin
-    // (logika ini bisa ditambahkan nanti untuk keamanan ekstra)
+    $conn->begin_transaction();
+    try {
+        // Update tabel User
+        $password_sql = '';
+        if (!empty($_POST['password'])) {
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $password_sql = ', password = ?';
+        }
 
-    $password_sql = '';
-    if (!empty($_POST['password'])) {
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $password_sql = ', password = ?';
-    }
+        $sql_user = "UPDATE User SET nama_lengkap = ?, email = ?, no_hp = ?, role = ? $password_sql WHERE id_user = ?";
+        $stmt_user = $conn->prepare($sql_user);
 
-    $sql = "UPDATE User SET nama_lengkap = ?, email = ?, no_hp = ?, role = ? $password_sql WHERE id_user = ?";
-    $stmt = $conn->prepare($sql);
+        if (!empty($password_sql)) {
+            $stmt_user->bind_param("sssssi", $nama_lengkap, $email, $no_hp, $role, $password, $id_user);
+        } else {
+            $stmt_user->bind_param("ssssi", $nama_lengkap, $email, $no_hp, $role, $id_user);
+        }
+        $stmt_user->execute();
 
-    if (!empty($password_sql)) {
-        $stmt->bind_param("sssssi", $nama_lengkap, $email, $no_hp, $role, $password, $id_user);
-    } else {
-        $stmt->bind_param("ssssi", $nama_lengkap, $email, $no_hp, $role, $id_user);
-    }
+        // Jika peran adalah Customer, update juga tabel Customer
+        if ($role == 'Customer') {
+            $segmentasi = sanitize($_POST['segmentasi']);
+            $sql_customer = "UPDATE Customer SET segmentasi = ? WHERE id_user = ?";
+            $stmt_customer = $conn->prepare($sql_customer);
+            $stmt_customer->bind_param("si", $segmentasi, $id_user);
+            $stmt_customer->execute();
+        }
 
-    if ($stmt->execute()) {
+        $conn->commit();
         $_SESSION['success_message'] = "Data pengguna berhasil diperbarui.";
-    } else {
-        $_SESSION['error_message'] = "Gagal memperbarui data: " . $stmt->error;
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['error_message'] = "Gagal memperbarui data: " . $e->getMessage();
     }
     header("Location: ../manajemen/pengguna.php");
     exit();
