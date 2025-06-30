@@ -43,7 +43,6 @@ Jika sudah terpenuhi masuk ke proses Installasi
 
 ## Demo
 
-Insert gif or link to demo
 
 http://crisp-force.test/ (Laragon)
 
