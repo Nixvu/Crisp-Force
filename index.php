@@ -252,7 +252,7 @@ $campaigns = $conn->query($sql_campaigns);
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
                         <img src="assets/images/logowh.png" alt="CRISP FORCE Logo" class="h-10 w-auto">
-                        <span class="text-lg font-bold text-white">CRISP FORCE</span>
+                        <span class="text-lg font-bold text-white">CRISP <br> FORCE</span>
                     </div>
                     <p class="text-slate-400 mb-4">Solusi teknologi terdepan untuk masa depan yang lebih baik.</p>
                     <div class="flex space-x-4">
