@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone = $_POST['phone'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
-    
+
     if ($password !== $confirm_password) {
         $error = 'Password dan konfirmasi password tidak sama!';
     } else {
@@ -38,185 +38,125 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Daftar - CRISP FORCE</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #F1F5F9;
+            /* Sesuai dengan bg-slate-100 dari index.php */
         }
     </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Logo and Title -->
-        <div class="text-center mb-8">
-            <div class="flex items-center justify-center mb-4">
-                <i data-lucide="zap" class="w-12 h-12 text-white"></i>
-            </div>
-            <h1 class="text-3xl font-extrabold text-white mb-2">CRISP FORCE</h1>
-            <p class="text-blue-100">Buat akun customer baru</p>
-        </div>
-
-        <!-- Register Card -->
-        <div class="bg-white rounded-2xl shadow-2xl p-8">
-            <?php if ($success): ?>
-                <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg mb-6">
-                    <div class="flex items-center">
-                        <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
-                        Pendaftaran berhasil! Silakan <a href="login.php" class="font-semibold underline">login</a>.
-                    </div>
+<body class="text-slate-800">
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <a href="index.php" class="flex items-center space-x-2">
+                    <img src="assets/images/Logobl.png" alt="CRISP FORCE Logo" class="h-auto w-auto">
+                    <span class="text-xl font-extrabold text-slate-900">CRISP <br> FORCE</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
+                    <a href="index.php" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
+                    <a href="index.php#products" class="text-slate-600 hover:text-blue-600 transition">Katalog</a>
+                    <a href="layanan.php" class="text-slate-600 hover:text-blue-600 transition">Layanan</a>
+                    <a href="tentang.php" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
                 </div>
-            <?php elseif ($error): ?>
-                <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
-                    <div class="flex items-center">
-                        <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
-                        <?php echo $error; ?>
-                    </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="login.php" class="text-slate-600 hover:text-blue-600 font-bold text-sm">Masuk</a>
+                    <a href="register.php" class="bg-blue-600 text-white font-bold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition text-sm shadow-lg shadow-blue-500/20">Daftar</a>
                 </div>
-            <?php endif; ?>
-
-            <?php if (!$success): ?>
-            <form method="POST" class="space-y-6">
-                <div>
-                    <label for="name" class="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
-                    <div class="relative">
-                        <i data-lucide="user" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"></i>
-                        <input type="text" id="name" name="name" required
-                               class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Masukkan nama lengkap">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
-                    <div class="relative">
-                        <i data-lucide="mail" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"></i>
-                        <input type="email" id="email" name="email" required
-                               class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Masukkan email">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="phone" class="block text-sm font-semibold text-slate-700 mb-2">Nomor Handphone</label>
-                    <div class="relative">
-                        <i data-lucide="phone" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"></i>
-                        <input type="tel" id="phone" name="phone" required
-                               class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Masukkan nomor handphone">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="password" class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
-                    <div class="relative">
-                        <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"></i>
-                        <input type="password" id="password" name="password" required
-                               class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Masukkan password">
-                    </div>
-                </div>
-
-                <div>
-                    <label for="confirm_password" class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
-                    <div class="relative">
-                        <i data-lucide="lock" class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"></i>
-                        <input type="password" id="confirm_password" name="confirm_password" required
-                               class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               placeholder="Konfirmasi password">
-                    </div>
-                </div>
-
-                <div class="flex items-start">
-                    <input type="checkbox" id="terms" required
-                           class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 mt-1">
-                    <label for="terms" class="ml-2 text-sm text-slate-600">
-                        Saya setuju dengan <a href="#" class="text-blue-600 hover:text-blue-700 font-medium">Syarat dan Ketentuan</a> 
-                        serta <a href="#" class="text-blue-600 hover:text-blue-700 font-medium">Kebijakan Privasi</a>
-                    </label>
-                </div>
-
-                <button type="submit" 
-                        class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
-                    Daftar Sekarang
-                </button>
-            </form>
-            <?php endif; ?>
-
-            <div class="mt-6 text-center">
-                <p class="text-slate-600">Sudah punya akun? 
-                    <a href="login.php" class="text-blue-600 hover:text-blue-700 font-semibold">Login disini</a>
-                </p>
-            </div>
-
-            <?php if (!$success): ?>
-            <!-- Social Register (Optional) -->
-            <div class="mt-6">
-                <div class="relative">
-                    <div class="absolute inset-0 flex items-center">
-                        <div class="w-full border-t border-slate-300"></div>
-                    </div>
-                    <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white text-slate-500">Atau daftar dengan</span>
-                    </div>
-                </div>
-
-                <div class="mt-6 grid grid-cols-2 gap-3">
-                    <button class="w-full inline-flex justify-center py-2 px-4 border border-slate-300 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-500 hover:bg-slate-50">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        <span class="ml-2">Google</span>
-                    </button>
-
-                    <button class="w-full inline-flex justify-center py-2 px-4 border border-slate-300 rounded-lg shadow-sm bg-white text-sm font-medium text-slate-500 hover:bg-slate-50">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                        </svg>
-                        <span class="ml-2">Facebook</span>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
+            </nav>
+            <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-slate-200">
+                <div class="px-6 py-4 space-y-4">
+                    <a href="index.php" class="block text-slate-600">Beranda</a>
+                    <a href="index.php#products" class="block text-slate-600">Katalog</a>
+                    <a href="layanan.php" class="block text-slate-600">Layanan</a>
+                    <a href="tentang.php" class="block text-slate-600">Tentang</a>
+                    <div class="pt-4 border-t border-slate-200 space-y-2">
+                        <a href="login.php" class="block text-slate-600 font-semibold">Masuk</a>
+                        <a href="register.php" class="block bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-center">Daftar</a>
+                    </div>
+                </div>
             </div>
-            <?php endif; ?>
-        </div>
+        </header>
 
-        <!-- Back to Home -->
-        <div class="text-center mt-6">
-            <a href="index.php" class="text-blue-100 hover:text-white font-medium flex items-center justify-center">
-                <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
-                Kembali ke Beranda
-            </a>
-        </div>
+        <main class="flex-grow container mx-auto p-6 md:p-8 flex items-center justify-center">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden flex w-full max-w-5xl">
+                <div class="hidden md:block w-1/2 bg-slate-100 p-12 relative">
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/images/branding_image.jpg');"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-center h-full bg-black bg-opacity-20 rounded-lg">
+                        <a href="index.php" class="flex items-center space-x-3">
+                            <img src="assets/images/logowh.png" alt="CRISP FORCE Logo" class="h-12 w-auto">
+                            <span class="text-3xl font-extrabold text-white">CRISP<br>FORCE</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                    <div>
+                        <h2 class="text-3xl font-bold text-slate-800 mb-2">Daftar</h2>
+                        <p class="text-slate-500 mb-8">Silahkan daftar untuk melanjutkan</p>
+
+                        <?php if ($success): ?>
+                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
+                                <span class="block sm:inline">Pendaftaran berhasil! Silakan <a href="login.php" class="font-semibold underline">login</a>.</span>
+                            </div>
+                        <?php elseif ($error): ?>
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
+                                <span class="block sm:inline"><?php echo $error; ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (!$success): ?>
+                            <form method="POST" class="space-y-4">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap *</label>
+                                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama Lengkap">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Alamat Email *</label>
+                                    <input type="email" id="email" name="email" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Alamat Email">
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Nomor HP *</label>
+                                    <input type="tel" id="phone" name="phone" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nomor Handphone">
+                                </div>
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1">Password *</label>
+                                    <input type="password" id="password" name="password" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Password">
+                                </div>
+                                <div>
+                                    <label for="confirm_password" class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password *</label>
+                                    <input type="password" id="confirm_password" name="confirm_password" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ketik Ulang Password">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 mt-4">
+                                    DAFTAR
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
-
-        // Password confirmation validation
-        document.getElementById('confirm_password').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            
-            if (password !== confirmPassword) {
-                this.setCustomValidity('Password tidak sama');
-            } else {
-                this.setCustomValidity('');
-            }
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
     </script>
 </body>
 
 </html>
-

@@ -81,7 +81,7 @@ $campaigns = $conn->query($sql_campaigns);
                 <a href="index.php" class="text-blue-600">Beranda</a>
                 <a href="#products" class="text-slate-600 hover:text-blue-600 transition">Katalog</a>
                 <a href="layanan.php" class="text-slate-600 hover:text-blue-600 transition">Layanan</a>
-                <a href="tentang.php" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
+                <a href="#" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
             </div>
 
             <div class="hidden md:flex items-center space-x-4">
