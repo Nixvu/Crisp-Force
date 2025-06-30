@@ -71,16 +71,15 @@ $status_map = [
 
 <body class="bg-slate-100">
 
-    <!-- Header -->
-    <header class="bg-white/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
+  <header class="bg-white/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.php" class="flex items-center space-x-2">
-                <i data-lucide="zap" class="w-7 h-7 text-blue-600"></i>
-                <span class="text-xl font-extrabold text-slate-900">CRISP FORCE</span>
+                <img src="assets/images/Logobl.png" alt="CRISP FORCE Logo" class="h-auto w-auto"></i>
+                <span class="text-xl font-extrabold text-slate-900">CRISP <br> FORCE</span>
             </a>
             <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
-                <a href="index.php" class="text-slate-600 hover:text-blue-600 transition">Beranda</a>
-                <a href="index.php#products" class="text-slate-600 hover:text-blue-600 transition">Katalog</a>
+                <a href="index.php" class="text-slate-600 hover:text-blue-600 transition0">Beranda</a>
+                <a href="products.php" class="text-slate-600 hover:text-blue-600 transition">Katalog</a>
                 <a href="layanan.php" class="text-blue-600">Layanan</a>
                 <a href="tentang.php" class="text-slate-600 hover:text-blue-600 transition">Tentang</a>
             </div>
@@ -94,6 +93,18 @@ $status_map = [
                 </button>
             </div>
         </nav>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-slate-200">
+            <div class="px-6 py-4 space-y-4">
+                <a href="index.php" class="block text-blue-600 font-semibold">Beranda</a>
+                <a href="#products" class="block text-slate-600">Katalog</a>
+                <a href="layanan.php" class="block text-slate-600">Layanan</a>
+                <a href="tentang.php" class="block text-slate-600">Tentang</a>
+                <div class="pt-4 border-t border-slate-200 space-y-2">
+                    <a href="login.php" class="block text-slate-600 font-semibold">Masuk</a>
+                    <a href="register.php" class="block bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-center">Daftar</a>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main>
