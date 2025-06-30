@@ -69,8 +69,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <aside id="sidebar-nav" class="w-64 flex-shrink-0 bg-slate-800 text-slate-300 flex-col p-4 hidden md:flex">
             <div class="h-20 flex items-center justify-center mb-6">
                 <a href="/" class="flex items-center space-x-2">
-                    <i data-lucide="zap" class="w-7 h-7 text-blue-400"></i>
-                    <span class="text-xl font-extrabold text-white">CRISP FORCE</span>
+                    <img src="../../assets/images/logowh.png" alt="CRISP FORCE Logo" class="h-auto w-auto"></i>
+                    <span class="text-xl font-extrabold text-white">CRISP <br> FORCE</span>
                 </a>
             </div>
 

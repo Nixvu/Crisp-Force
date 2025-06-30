@@ -53,8 +53,15 @@ $campaigns = $conn->query($sql_campaigns);
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
     </style>
 </head>
@@ -65,9 +72,10 @@ $campaigns = $conn->query($sql_campaigns);
     <header class="bg-white/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="index.php" class="flex items-center space-x-2">
-                <i data-lucide="zap" class="w-7 h-7 text-blue-600"></i>
-                <span class="text-xl font-extrabold text-slate-900">CRISP FORCE</span>
+                <img src="assets/images/Logobl.png" alt="CRISP FORCE Logo" class="h-auto w-auto"></i>
+                <span class="text-xl font-extrabold text-slate-900">CRISP <br> FORCE</span>
             </a>
+
 
             <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
                 <a href="index.php" class="text-blue-600">Beranda</a>
@@ -179,34 +187,34 @@ $campaigns = $conn->query($sql_campaigns);
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     <?php while ($product = $featured_products->fetch_assoc()): ?>
-                    <div class="card-hover bg-white rounded-2xl shadow-sm overflow-hidden">
-                        <div class="h-48 bg-slate-200 overflow-hidden">
-                            <img src="<?php echo $product['gambar_url'] ? 'assets/uploads/' . htmlspecialchars($product['gambar_url']) : 'assets/images/product-placeholder.png'; ?>" 
-                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-                        </div>
-                        <div class="p-6">
-                            <div class="mb-3">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
-                                    <?php echo strtoupper(htmlspecialchars($product['category'])); ?>
-                                </span>
+                        <div class="card-hover bg-white rounded-2xl shadow-sm overflow-hidden">
+                            <div class="h-48 bg-slate-200 overflow-hidden">
+                                <img src="<?php echo $product['gambar_url'] ? 'assets/uploads/' . htmlspecialchars($product['gambar_url']) : 'assets/images/product-placeholder.png'; ?>"
+                                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                             </div>
-                            <h3 class="font-bold text-lg text-slate-900 mb-2"><?php echo htmlspecialchars($product['nama_product']); ?></h3>
-                            <div class="flex items-center mb-3">
-                                <div class="flex text-yellow-400 mr-2">
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                                    <i data-lucide="star" class="w-4 h-4 fill-current opacity-50"></i>
+                            <div class="p-6">
+                                <div class="mb-3">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+                                        <?php echo strtoupper(htmlspecialchars($product['category'])); ?>
+                                    </span>
                                 </div>
-                                <span class="text-slate-500 text-sm">(4.5)</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <h4 class="text-xl font-bold text-blue-600"><?php echo formatCurrency($product['harga']); ?></h4>
-                                <span class="text-sm text-slate-500">Stok: <?php echo $product['stok']; ?></span>
+                                <h3 class="font-bold text-lg text-slate-900 mb-2"><?php echo htmlspecialchars($product['nama_product']); ?></h3>
+                                <div class="flex items-center mb-3">
+                                    <div class="flex text-yellow-400 mr-2">
+                                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                        <i data-lucide="star" class="w-4 h-4 fill-current opacity-50"></i>
+                                    </div>
+                                    <span class="text-slate-500 text-sm">(4.5)</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xl font-bold text-blue-600"><?php echo formatCurrency($product['harga']); ?></h4>
+                                    <span class="text-sm text-slate-500">Stok: <?php echo $product['stok']; ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     <?php endwhile; ?>
                 </div>
 
@@ -270,32 +278,32 @@ $campaigns = $conn->query($sql_campaigns);
 
         <!-- Campaigns Section -->
         <?php if ($campaigns->num_rows > 0): ?>
-        <section class="py-20 bg-slate-100">
-            <div class="container mx-auto px-6">
-                <div class="text-center mb-16">
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Promo & Penawaran</h2>
-                    <p class="text-lg text-slate-600 max-w-2xl mx-auto">Jangan lewatkan penawaran menarik dan promo spesial untuk pelanggan setia kami.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <?php while ($campaign = $campaigns->fetch_assoc()): ?>
-                    <div class="card-hover bg-gradient-to-br from-blue-600 to-purple-600 text-white p-8 rounded-2xl">
-                        <div class="mb-4">
-                            <i data-lucide="gift" class="w-12 h-12 text-blue-200"></i>
-                        </div>
-                        <h3 class="font-bold text-xl mb-4"><?php echo htmlspecialchars($campaign['nama_kampanye']); ?></h3>
-                        <p class="text-blue-100 mb-6"><?php echo htmlspecialchars($campaign['deskripsi']); ?></p>
-                        <?php if ($campaign['kode_promo']): ?>
-                        <div class="bg-white/20 backdrop-blur-sm p-3 rounded-lg">
-                            <span class="text-sm">Kode Promo:</span>
-                            <span class="font-bold text-lg block"><?php echo htmlspecialchars($campaign['kode_promo']); ?></span>
-                        </div>
-                        <?php endif; ?>
+            <section class="py-20 bg-slate-100">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16">
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">Promo & Penawaran</h2>
+                        <p class="text-lg text-slate-600 max-w-2xl mx-auto">Jangan lewatkan penawaran menarik dan promo spesial untuk pelanggan setia kami.</p>
                     </div>
-                    <?php endwhile; ?>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <?php while ($campaign = $campaigns->fetch_assoc()): ?>
+                            <div class="card-hover bg-gradient-to-br from-blue-600 to-purple-600 text-white p-8 rounded-2xl">
+                                <div class="mb-4">
+                                    <i data-lucide="gift" class="w-12 h-12 text-blue-200"></i>
+                                </div>
+                                <h3 class="font-bold text-xl mb-4"><?php echo htmlspecialchars($campaign['nama_kampanye']); ?></h3>
+                                <p class="text-blue-100 mb-6"><?php echo htmlspecialchars($campaign['deskripsi']); ?></p>
+                                <?php if ($campaign['kode_promo']): ?>
+                                    <div class="bg-white/20 backdrop-blur-sm p-3 rounded-lg">
+                                        <span class="text-sm">Kode Promo:</span>
+                                        <span class="font-bold text-lg block"><?php echo htmlspecialchars($campaign['kode_promo']); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
         <?php endif; ?>
 
         <!-- CTA Section -->
@@ -397,7 +405,7 @@ $campaigns = $conn->query($sql_campaigns);
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
@@ -412,4 +420,3 @@ $campaigns = $conn->query($sql_campaigns);
 </body>
 
 </html>
-
