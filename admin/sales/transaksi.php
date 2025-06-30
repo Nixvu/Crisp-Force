@@ -110,13 +110,13 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
                                         <?= ucfirst($trx['status_pembayaran']) ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                                    <div class="flex space-x-2">
-                                        <button onclick="viewInvoice(<?= $trx['id_transaction'] ?>)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                            <i data-lucide="eye" class="w-3 h-3 mr-1"></i> Lihat
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+                                    <div class="flex justify-center space-x-2">
+                                        <button onclick="viewInvoice(<?= $trx['id_transaction'] ?>)" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" title="Lihat Detail">
+                                            <i data-lucide="eye" class="w-4 h-4"></i>
                                         </button>
-                                        <a href="../actions/proses_transaksi.php?action=delete&id=<?= $trx['id_transaction'] ?>" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="return confirm('Anda yakin ingin menghapus transaksi ini?')">
-                                            <i data-lucide="trash-2" class="w-3 h-3 mr-1"></i> Hapus
+                                        <a href="../actions/proses_transaksi.php?action=delete&id=<?= $trx['id_transaction'] ?>" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="return confirm('Anda yakin ingin menghapus transaksi ini?')" title="Hapus Transaksi">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </a>
                                     </div>
                                 </td>

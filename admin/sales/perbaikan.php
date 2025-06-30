@@ -141,11 +141,11 @@ $technicians = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role =
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"><?= formatDate($order['tanggal_masuk']) ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
                                             <div class="flex justify-center space-x-2">
-                                                <button onclick="showAssignTechnicianModal(<?= $order['id_service'] ?>)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                                                    <i data-lucide="check" class="w-3 h-3 mr-1"></i> Terima
+                                                <button onclick="showAssignTechnicianModal(<?= $order['id_service'] ?>)" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" title="Terima & Tetapkan Teknisi">
+                                                    <i data-lucide="check" class="w-4 h-4"></i>
                                                 </button>
-                                                <a href="../actions/proses_perbaikan.php?action=reject&id=<?= $order['id_service'] ?>" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="return confirm('Yakin tolak perbaikan ini?')">
-                                                    <i data-lucide="x" class="w-3 h-3 mr-1"></i> Tolak
+                                                <a href="../actions/proses_perbaikan.php?action=reject&id=<?= $order['id_service'] ?>" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" onclick="return confirm('Yakin tolak perbaikan ini?')" title="Tolak Perbaikan">
+                                                    <i data-lucide="x" class="w-4 h-4"></i>
                                                 </a>
                                             </div>
                                         </td>
@@ -208,8 +208,8 @@ $technicians = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role =
                                             <?= $p['tanggal_estimasi'] ? formatDate($p['tanggal_estimasi']) : '-' ?>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                            <button onclick="updateProgress(<?= $p['id_service'] ?>)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                <i data-lucide="edit-3" class="w-3 h-3 mr-1"></i> Update
+                                            <button onclick="updateProgress(<?= $p['id_service'] ?>)" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" title="Update Progress">
+                                                <i data-lucide="edit-3" class="w-4 h-4"></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -269,8 +269,8 @@ $technicians = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role =
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"><?= formatDate($h['updated_at']) ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
-                                            <button onclick="showServiceDetails(<?= $h['id_service'] ?>)" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                                <i data-lucide="eye" class="w-3 h-3 mr-1"></i> Detail
+                                            <button onclick="showServiceDetails(<?= $h['id_service'] ?>)" class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" title="Lihat Detail Riwayat">
+                                                <i data-lucide="eye" class="w-4 h-4"></i>
                                             </button>
                                         </td>
                                     </tr>
