@@ -72,7 +72,7 @@ if ($action == 'add' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $conn->begin_transaction();
     try {
         $stmt = $conn->prepare("INSERT INTO Product (kode_product, nama_product, description, category, stok, harga, gambar_url, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssidii", $kode_product, $nama_product, $description, $category, $stok, $harga, $gambar_url, $created_by);
+        $stmt->bind_param("ssssidsi", $kode_product, $nama_product, $description, $category, $stok, $harga, $gambar_url, $created_by);
         
         if ($stmt->execute()) {
             $conn->commit();
