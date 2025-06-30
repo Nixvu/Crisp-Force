@@ -20,12 +20,12 @@ while ($row = $result_products->fetch_assoc()) {
 $sql_campaigns = "SELECT * FROM Campaign 
                  WHERE status = 'aktif' 
                  AND (target_segmentasi = ? OR target_segmentasi = 'semua')
-                 ORDER BY tanggal_mulai DESC LIMIT 1";
+                 ORDER BY tanggal_mulai DESC";
 $stmt_campaigns = $conn->prepare($sql_campaigns);
 $segmentasi = $customer['segmentasi'] ?? 'umum';
 $stmt_campaigns->bind_param("s", $segmentasi);
 $stmt_campaigns->execute();
-$featured_campaign = $stmt_campaigns->get_result()->fetch_assoc();
+$active_campaigns = $stmt_campaigns->get_result()->fetch_all(MYSQLI_ASSOC);
 
 include '../includes/header.php';
 ?>
@@ -34,64 +34,77 @@ include '../includes/header.php';
     document.getElementById('page-title').textContent = 'Katalog Produk';
 </script>
 
-<!-- Featured Campaign Banner -->
-<?php if ($featured_campaign): ?>
-<div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-xl shadow-lg mb-8">
-    <div class="flex flex-col md:flex-row items-center justify-between">
-        <div class="md:w-2/3">
-            <h3 class="text-2xl font-bold mb-2"><?php echo htmlspecialchars($featured_campaign['nama_kampanye']); ?></h3>
-            <p class="text-blue-100 mb-4"><?php echo htmlspecialchars($featured_campaign['deskripsi']); ?></p>
-            <?php if ($featured_campaign['kode_promo']): ?>
-            <div class="flex items-center">
-                <span class="text-blue-100 mr-2">Gunakan kode:</span>
-                <span class="bg-white text-blue-600 font-bold px-3 py-1 rounded-lg"><?php echo htmlspecialchars($featured_campaign['kode_promo']); ?></span>
+<!-- Dynamic Campaign Banner/Carousel -->
+<?php if (!empty($active_campaigns)): ?>
+    <div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-8" id="campaign-banner-container">
+        <div class="flex transition-transform duration-500 ease-in-out" id="campaign-carousel-inner">
+            <?php foreach ($active_campaigns as $index => $campaign): ?>
+                <div class="campaign-slide flex-shrink-0 w-full p-6 text-white" data-index="<?= $index ?>">
+                    <div class="flex flex-col md:flex-row items-center justify-between">
+                        <div class="md:w-2/3 text-center md:text-left mb-4 md:mb-0">
+                            <h3 class="text-2xl font-bold mb-2"><?= htmlspecialchars($campaign['nama_kampanye']) ?></h3>
+                            <p class="text-blue-100 mb-4"><?= htmlspecialchars($campaign['deskripsi']) ?></p>
+                            <?php if ($campaign['kode_promo']): ?>
+                                <div class="flex items-center justify-center md:justify-start">
+                                    <span class="text-blue-100 mr-2">Gunakan kode:</span>
+                                    <span class="bg-white text-blue-600 font-bold px-3 py-1 rounded-lg"><?= htmlspecialchars($campaign['kode_promo']) ?></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="md:w-1/3 text-center">
+                            <i data-lucide="gift" class="w-16 h-16 text-blue-200 mx-auto"></i>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php if (count($active_campaigns) > 1): ?>
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2" id="carousel-indicators">
+                <?php foreach ($active_campaigns as $index => $campaign): ?>
+                    <button class="w-3 h-3 bg-white rounded-full opacity-50 focus:outline-none transition-opacity duration-300" data-slide-to="<?= $index ?>"></button>
+                <?php endforeach; ?>
             </div>
-            <?php endif; ?>
-        </div>
-        <div class="md:w-1/3 text-center mt-4 md:mt-0">
-            <i data-lucide="gift" class="w-16 h-16 text-blue-200 mx-auto"></i>
-        </div>
+        <?php endif; ?>
     </div>
-</div>
 <?php endif; ?>
 
 <!-- Products Grid -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     <?php foreach ($all_products as $product): ?>
-    <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
-        <div class="h-48 bg-slate-100 overflow-hidden">
-            <img src="<?php echo $product['gambar_url'] ? '../assets/uploads/' . htmlspecialchars($product['gambar_url']) : '../assets/images/product-placeholder.png'; ?>" 
-                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-        </div>
-        <div class="p-5">
-            <div class="mb-2">
-                <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
-                    <?php echo strtoupper(htmlspecialchars($product['category'])); ?>
-                </span>
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden group">
+            <div class="h-48 bg-slate-100 overflow-hidden">
+                <img src="<?php echo $product['gambar_url'] ? '../assets/uploads/' . htmlspecialchars($product['gambar_url']) : '../assets/images/product-placeholder.png'; ?>"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
             </div>
-            <h5 class="font-bold text-lg text-slate-800 mb-2 line-clamp-2"><?php echo htmlspecialchars($product['nama_product']); ?></h5>
-            <div class="flex items-center mb-2">
-                <div class="flex text-yellow-400 mr-2">
-                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                    <i data-lucide="star" class="w-4 h-4 fill-current"></i>
-                    <i data-lucide="star" class="w-4 h-4 fill-current opacity-50"></i>
+            <div class="p-5">
+                <div class="mb-2">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+                        <?php echo strtoupper(htmlspecialchars($product['category'])); ?>
+                    </span>
                 </div>
-                <span class="text-slate-500 text-sm">(4.5)</span>
+                <h5 class="font-bold text-lg text-slate-800 mb-2 line-clamp-2"><?php echo htmlspecialchars($product['nama_product']); ?></h5>
+                <div class="flex items-center mb-2">
+                    <div class="flex text-yellow-400 mr-2">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current opacity-50"></i>
+                    </div>
+                    <span class="text-slate-500 text-sm">(4.5)</span>
+                </div>
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="text-xl font-bold text-blue-600"><?php echo formatCurrency($product['harga']); ?></h4>
+                    <span class="text-sm text-slate-500">Stok: <?php echo $product['stok']; ?></span>
+                </div>
             </div>
-            <div class="flex items-center justify-between mb-3">
-                <h4 class="text-xl font-bold text-blue-600"><?php echo formatCurrency($product['harga']); ?></h4>
-                <span class="text-sm text-slate-500">Stok: <?php echo $product['stok']; ?></span>
-            </div>
-        </div>
-        <div class="px-5 pb-5">
-            <button class="w-full bg-slate-800 text-white font-semibold py-3 rounded-lg hover:bg-slate-900 transition-colors duration-300" 
+            <div class="px-5 pb-5">
+                <button class="w-full bg-slate-800 text-white font-semibold py-3 rounded-lg hover:bg-slate-900 transition-colors duration-300"
                     onclick="openProductModal(<?php echo $product['id_product']; ?>)">
-                Lihat Detail
-            </button>
+                    Lihat Detail
+                </button>
+            </div>
         </div>
-    </div>
     <?php endforeach; ?>
 </div>
 
@@ -129,12 +142,12 @@ include '../includes/header.php';
             <div id="alert-placeholder" class="mb-4"></div>
             <form id="buyForm">
                 <input type="hidden" name="product_id" id="buyProductId">
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Jumlah</label>
                     <input type="number" name="quantity" id="quantityInput" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" min="1" value="1" required>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Metode Pembayaran</label>
                     <select class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" name="payment_method" required>
@@ -142,7 +155,7 @@ include '../includes/header.php';
                         <option value="tunai">Tunai</option>
                     </select>
                 </div>
-                
+
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Metode Pengambilan</label>
                     <select class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 delivery-method" name="delivery_method" required>
@@ -150,12 +163,12 @@ include '../includes/header.php';
                         <option value="diantar">Diantar ke Alamat</option>
                     </select>
                 </div>
-                
+
                 <div class="address-fields mb-4" style="<?php echo ($customer["alamat_pengiriman"] && $delivery_method !== "diantar") ? "display: none;" : "display: block;"; ?>">
                     <label class="block text-sm font-semibold text-slate-700 mb-2">Alamat Pengiriman</label>
                     <textarea class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" name="shipping_address" rows="3"><?php echo htmlspecialchars($customer["alamat_pengiriman"] ?? ""); ?></textarea>
                 </div>
-                
+
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                     <p class="text-blue-800 font-semibold">Total Pembayaran: <span class="total-payment" id="totalPayment">Rp 0</span></p>
                 </div>
@@ -173,7 +186,11 @@ include '../includes/header.php';
     let products = <?php echo json_encode($all_products); ?>;
 
     function formatCurrency(number) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(number);
     }
 
     function openProductModal(productId) {
@@ -181,7 +198,7 @@ include '../includes/header.php';
         if (!currentProduct) return;
 
         document.getElementById('modalProductName').textContent = currentProduct.nama_product;
-        
+
         const content = `
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -217,11 +234,11 @@ include '../includes/header.php';
                 </div>
             </div>
         `;
-        
+
         document.getElementById('modalProductContent').innerHTML = content;
         document.getElementById('productModal').classList.remove('hidden');
         document.getElementById('productModal').classList.add('flex');
-        
+
         // Re-initialize Lucide icons
         lucide.createIcons();
     }
@@ -233,12 +250,12 @@ include '../includes/header.php';
 
     function openBuyModal() {
         if (!currentProduct) return;
-        
+
         document.getElementById('buyModalTitle').textContent = `Beli ${currentProduct.nama_product}`;
         document.getElementById('buyProductId').value = currentProduct.id_product;
         document.getElementById('quantityInput').max = currentProduct.stok;
         document.getElementById('totalPayment').textContent = formatCurrency(currentProduct.harga);
-        
+
         closeProductModal();
         document.getElementById('buyModal').classList.remove('hidden');
         document.getElementById('buyModal').classList.add('flex');
@@ -269,7 +286,7 @@ include '../includes/header.php';
         const form = document.getElementById('buyForm');
         const formData = new FormData(form);
         const alertPlaceholder = document.getElementById('alert-placeholder');
-        
+
         // Basic validation
         if (formData.get('delivery_method') === 'diantar' && !formData.get('shipping_address').trim()) {
             alertPlaceholder.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">Alamat pengiriman harus diisi untuk metode pengantaran.</div>';
@@ -280,28 +297,99 @@ include '../includes/header.php';
         alertPlaceholder.innerHTML = '<div class="bg-blue-50 border border-blue-200 text-blue-700 p-3 rounded-lg">Memproses pembelian...</div>';
 
         fetch('process_order.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alertPlaceholder.innerHTML = '<div class="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg">' + data.message + '</div>';
-                setTimeout(() => {
-                    closeBuyModal();
-                    location.reload();
-                }, 2000);
-            } else {
-                alertPlaceholder.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">' + data.message + '</div>';
-            }
-        })
-        .catch(error => {
-            alertPlaceholder.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">Terjadi kesalahan. Silakan coba lagi.</div>';
-        });
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alertPlaceholder.innerHTML = '<div class="bg-green-50 border border-green-200 text-green-700 p-3 rounded-lg">' + data.message + '</div>';
+                    setTimeout(() => {
+                        closeBuyModal();
+                        location.reload();
+                    }, 2000);
+                } else {
+                    alertPlaceholder.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">' + data.message + '</div>';
+                }
+            })
+            .catch(error => {
+                alertPlaceholder.innerHTML = '<div class="bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg">Terjadi kesalahan. Silakan coba lagi.</div>';
+            });
     }
 
     // Initialize Lucide icons
     lucide.createIcons();
+
+    const campaignSlides = document.querySelectorAll('.campaign-slide');
+    const carouselInner = document.getElementById('campaign-carousel-inner');
+    const carouselIndicators = document.getElementById('carousel-indicators');
+    const numSlides = campaignSlides.length;
+    let currentIndex = 0;
+    let slideInterval;
+
+    // Define a list of appealing background color classes
+    const bgColors = [
+        'bg-gradient-to-r from-blue-600 to-blue-700',
+        'bg-gradient-to-r from-green-600 to-green-700',
+        'bg-gradient-to-r from-purple-600 to-purple-700',
+        'bg-gradient-to-r from-red-600 to-red-700',
+        'bg-gradient-to-r from-yellow-600 to-yellow-700',
+        'bg-gradient-to-r from-pink-600 to-pink-700'
+    ];
+
+    function applyRandomBackgrounds() {
+        campaignSlides.forEach(slide => {
+            const randomIndex = Math.floor(Math.random() * bgColors.length);
+            slide.classList.add(bgColors[randomIndex]);
+        });
+    }
+
+    function updateCarousel() {
+        const offset = -currentIndex * 100;
+        carouselInner.style.transform = `translateX(${offset}%)`;
+
+        if (carouselIndicators) {
+            Array.from(carouselIndicators.children).forEach((indicator, idx) => {
+                if (idx === currentIndex) {
+                    indicator.classList.add('opacity-100');
+                } else {
+                    indicator.classList.remove('opacity-100');
+                }
+            });
+        }
+    }
+
+    function startCarousel() {
+        if (numSlides > 1) {
+            slideInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % numSlides;
+                updateCarousel();
+            }, 5000); // Change slide every 5 seconds
+        }
+    }
+
+    function stopCarousel() {
+        clearInterval(slideInterval);
+    }
+
+    // Event listeners for indicators
+    if (carouselIndicators) {
+        Array.from(carouselIndicators.children).forEach(indicator => {
+            indicator.addEventListener('click', (e) => {
+                stopCarousel();
+                currentIndex = parseInt(e.target.dataset.slideTo);
+                updateCarousel();
+                startCarousel();
+            });
+        });
+    }
+
+    // Initial setup
+    if (numSlides > 0) {
+        applyRandomBackgrounds();
+        updateCarousel();
+        startCarousel();
+    }
 </script>
 
 <?php include '../includes/footer.php'; ?>

@@ -129,121 +129,147 @@ include '../includes/header.php';
     </div>
 
     <!-- Baris Konten Tengah (Status Perbaikan dan Promo) -->
-    <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
         <!-- Kolom Kiri: Status Perbaikan Terkini (Lebih Lebar) -->
         <div class="lg:col-span-3">
             <?php if ($latest_repair): ?>
-            <div class="bg-white p-6 rounded-xl shadow-sm h-full">
+            <div class="bg-white p-6 rounded-xl shadow-sm h-full flex flex-col">
                 <h3 class="font-bold text-lg text-slate-800 mb-4">Status Perbaikan Terkini</h3>
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                    <div class="text-center">
+                
+                <!-- Info Perangkat -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6 pb-6 border-b border-slate-200">
+                    <div class="md:col-span-1 text-center">
                         <?php
-                            $deviceImage = '../assets/images/device-placeholder.png.png'; // Default image
-                            if (isset($latest_repair['jenis_perangkat'])) {
-                                $deviceType = strtolower($latest_repair['jenis_perangkat']);
+                            $deviceImage = '../assets/images/device-placeholder.png.png'; // Default
+                            if (isset($latest_repair['kategori_barang'])) {
+                                $deviceType = strtolower($latest_repair['kategori_barang']);
                                 $imagePath = '../assets/images/' . $deviceType . '.png';
-                                // Asumsi path absolut ke file untuk pengecekan
                                 $absoluteImagePath = realpath(__DIR__ . '/../assets/images/' . $deviceType . '.png');
                                 if ($absoluteImagePath && file_exists($absoluteImagePath)) {
                                     $deviceImage = $imagePath;
                                 }
                             }
                         ?>
-                        <img src="<?= $deviceImage ?>" class="w-24 h-24 mx-auto mb-3 rounded-lg object-cover">
-                        <h6 class="font-semibold"><?= htmlspecialchars($latest_repair['nama_service']) ?></h6>
-                        <small class="text-slate-500">ID: <?= htmlspecialchars($latest_repair['kode_service']) ?></small>
+                        <img src="<?= $deviceImage ?>" alt="Gambar Perangkat" class="w-28 h-28 mx-auto mb-3 rounded-lg object-cover bg-slate-100">
+                        <h6 class="font-semibold text-base"><?= htmlspecialchars($latest_repair['nama_service']) ?></h6>
+                        <small class="text-sm text-slate-500"><?= htmlspecialchars($latest_repair['kode_service']) ?></small>
                     </div>
-                    <div class="lg:col-span-3">
+                    <div class="md:col-span-3">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
                                 <p class="text-sm text-slate-500">Merk</p>
-                                <p class="font-semibold"><?= htmlspecialchars($latest_repair['merk']) ?></p>
+                                <p class="font-semibold text-base"><?= htmlspecialchars($latest_repair['merk']) ?></p>
                             </div>
                             <div>
                                 <p class="text-sm text-slate-500">Model</p>
-                                <p class="font-semibold"><?= htmlspecialchars($latest_repair['model']) ?></p>
+                                <p class="font-semibold text-base"><?= htmlspecialchars($latest_repair['model']) ?></p>
                             </div>
                             <div>
                                 <p class="text-sm text-slate-500">Tanggal Masuk</p>
-                                <p class="font-semibold"><?= formatDate($latest_repair['tanggal_masuk']) ?></p>
+                                <p class="font-semibold text-base"><?= formatDate($latest_repair['tanggal_masuk']) ?></p>
                             </div>
                         </div>
-                        
-                        <div class="mb-4">
-                            <p class="text-sm text-slate-500 mb-2">Deskripsi Kerusakan</p>
-                            <p class="text-slate-700"><?= htmlspecialchars($latest_repair['deskripsi_kerusakan']) ?></p>
-                        </div>
-                        
                         <div class="bg-blue-50 p-4 rounded-lg">
-                            <p class="text-sm font-semibold text-blue-800 mb-1">Catatan Teknisi</p>
-                            <p class="text-blue-700"><?= htmlspecialchars($latest_repair['progress_catatan'] ?? 'Belum ada catatan dari teknisi') ?></p>
-                        </div>
-                        
-                        <!-- Progress Bar -->
-                        <?php
-                            $status_map = [
-                                'diterima_digerai' => ['Diterima', 'warning', 15], 
-                                'analisis_kerusakan' => ['Analisis', 'warning', 30],
-                                'menunggu_sparepart' => ['Menunggu Part', 'info', 50], 
-                                'dalam_perbaikan' => ['Perbaikan', 'primary', 70],
-                                'perbaikan_selesai' => ['Selesai', 'success', 100], 
-                                'gagal' => ['Gagal', 'danger', 100],
-                                'diambil_pelanggan' => ['Diambil', 'secondary', 100]
-                            ];
-                            $current_status_key = $latest_repair['progress_status'] ?? 'diterima_digerai';
-                            [$status_text, $status_color, $progress_value] = $status_map[$current_status_key];
-                        ?>
-                        <div class="mt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-semibold text-slate-700">Progres Saat Ini</span>
-                                <span class="bg-<?= $status_color == 'warning' ? 'yellow' : ($status_color == 'info' ? 'blue' : ($status_color == 'primary' ? 'blue' : ($status_color == 'success' ? 'green' : ($status_color == 'danger' ? 'red' : 'gray')))) ?>-100 text-<?= $status_color == 'warning' ? 'yellow' : ($status_color == 'info' ? 'blue' : ($status_color == 'primary' ? 'blue' : ($status_color == 'success' ? 'green' : ($status_color == 'danger' ? 'red' : 'gray')))) ?>-800 text-xs font-medium px-2.5 py-1 rounded-full"><?= $status_text ?></span>
-                            </div>
-                            <div class="w-full bg-slate-200 rounded-full h-3">
-                                <div class="bg-<?= $status_color == 'warning' ? 'yellow' : ($status_color == 'info' ? 'blue' : ($status_color == 'primary' ? 'blue' : ($status_color == 'success' ? 'green' : ($status_color == 'danger' ? 'red' : 'gray')))) ?>-600 h-3 rounded-full transition-all duration-300" style="width: <?= $progress_value ?>%"></div>
-                            </div>
+                            <p class="text-sm font-semibold text-blue-800 mb-1">Catatan Teknisi Terakhir</p>
+                            <p class="text-base text-blue-700"><?= htmlspecialchars($latest_repair['progress_catatan'] ?? 'Belum ada catatan dari teknisi.') ?></p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Progress Timeline -->
+                <div>
+                    <h4 class="font-semibold text-slate-700 mb-4">Progres Perbaikan</h4>
+                    <?php
+                        $status_timeline = [
+                            'diterima_digerai' => ['Diterima', 'check-circle', 1],
+                            'analisis_kerusakan' => ['Analisis Kerusakan', 'search', 2],
+                            'menunggu_sparepart' => ['Menunggu Sparepart', 'clock', 3],
+                            'dalam_perbaikan' => ['Dalam Perbaikan', 'wrench', 4],
+                            'perbaikan_selesai' => ['Selesai & Siap Diambil', 'package-check', 5],
+                        ];
+                        $current_status_key = $latest_repair['progress_status'] ?? 'diterima_digerai';
+                        $final_statuses = ['gagal', 'diambil_pelanggan'];
+
+                        if (in_array($current_status_key, $final_statuses)) {
+                            if ($current_status_key == 'gagal') {
+                                echo '<div class="flex items-center bg-red-50 text-red-700 p-4 rounded-lg"><i data-lucide="x-circle" class="w-6 h-6 mr-3"></i><div><p class="font-bold">Perbaikan Gagal</p><p class="text-sm">Silakan hubungi kami untuk informasi lebih lanjut.</p></div></div>';
+                            } else {
+                                echo '<div class="flex items-center bg-green-50 text-green-700 p-4 rounded-lg"><i data-lucide="check-check" class="w-6 h-6 mr-3"></i><div><p class="font-bold">Perbaikan Selesai & Sudah Diambil</p><p class="text-sm">Terima kasih telah menggunakan layanan kami.</p></div></div>';
+                            }
+                        } else {
+                            $current_step = $status_timeline[$current_status_key][2];
+                    ?>
+                    <div class="grid grid-cols-5 text-center text-xs font-medium text-slate-500">
+                        <?php foreach ($status_timeline as $key => $details):
+                            [$label, $icon, $step] = $details;
+                            $state = 'pending';
+                            if ($step < $current_step) $state = 'completed';
+                            if ($step == $current_step) $state = 'active';
+                        ?>
+                        <div class="progress-step <?= $state ?> relative">
+                            <div class="progress-step-circle">
+                                <i data-lucide="<?= $icon ?>" class="w-5 h-5"></i>
+                            </div>
+                            <p class="mt-2 text-xs <?= ($state == 'active') ? 'font-bold text-blue-600' : '' ?>"><?= $label ?></p>
+                            <?php if ($step < 5): ?>
+                                <div class="progress-step-line"></div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php } ?>
+                </div>
+
+            </div>
+            <?php else: ?>
+            <div class="bg-white p-6 rounded-xl shadow-sm h-full flex items-center justify-center">
+                <div class="text-center">
+                    <i data-lucide="wrench" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Tidak Ada Perbaikan Aktif</h3>
+                    <p class="text-slate-500">Anda tidak memiliki perbaikan yang sedang berjalan saat ini.</p>
                 </div>
             </div>
             <?php endif; ?>
         </div>
         
-        <!-- Kolom Kanan: Promo dan Diskon + Log Perbaikan (Lebih Sempit) -->
-        <div class="lg:col-span-2 space-y-6">
+        <!-- Kolom Kanan: Promo dan Log (Lebih Sempit) -->
+        <div class="lg:col-span-1 space-y-6">
             <!-- Promo & Diskon -->
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h3 class="font-bold text-lg mb-4">Promo & Diskon</h3>
-                <div class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col h-64">
+                <h3 class="font-bold text-base mb-3 flex-shrink-0">Promo & Diskon</h3>
+                <div class="space-y-2 flex-grow overflow-y-auto">
                     <?php if ($campaigns->num_rows > 0): ?>
+                        <?php mysqli_data_seek($campaigns, 0); ?>
                         <?php while ($campaign = $campaigns->fetch_assoc()): ?>
-                        <div class="border border-slate-200 rounded-lg p-4">
-                            <h5 class="font-semibold text-slate-800 mb-2"><?= htmlspecialchars($campaign['nama_kampanye']) ?></h5>
-                            <p class="text-sm text-slate-600 mb-2"><?= substr(htmlspecialchars($campaign['deskripsi']), 0, 80) . '...' ?></p>
+                        <a href="#" onclick="showPromoDetails(event, '<?= htmlspecialchars(addslashes($campaign['nama_kampanye'])) ?>', '<?= htmlspecialchars(addslashes($campaign['deskripsi'])) ?>', '<?= htmlspecialchars($campaign['kode_promo']) ?>')" class="block border border-slate-200 rounded-lg p-2.5 hover:bg-slate-50 hover:border-blue-400 transition-all">
+                            <h5 class="font-semibold text-slate-800 text-sm mb-1 truncate"><?= htmlspecialchars($campaign['nama_kampanye']) ?></h5>
+                            <p class="text-xs text-slate-500 mb-1.5 line-clamp-2"><?= htmlspecialchars($campaign['deskripsi']) ?></p>
                             <?php if ($campaign['kode_promo']): ?>
-                            <div class="bg-blue-50 border border-blue-200 rounded p-2">
+                            <div class="bg-blue-50 border border-blue-200 rounded px-1.5 py-0.5 inline-block">
                                 <span class="text-xs font-semibold text-blue-800">Kode: <?= htmlspecialchars($campaign['kode_promo']) ?></span>
                             </div>
                             <?php endif; ?>
-                        </div>
+                        </a>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p class="text-slate-500 text-center py-8">Tidak ada promo yang tersedia saat ini.</p>
+                        <div class="flex items-center justify-center h-full">
+                            <p class="text-slate-500 text-sm text-center">Tidak ada promo saat ini.</p>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
             
             <!-- Log Perbaikan -->
-            <div class="bg-white p-6 rounded-xl shadow-sm">
-                <h3 class="font-bold text-lg mb-4">Log Perbaikan</h3>
-                <div class="space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col h-64">
+                <h3 class="font-bold text-base mb-3 flex-shrink-0">Log Perbaikan Terakhir</h3>
+                <div class="space-y-2 flex-grow overflow-y-auto">
                     <?php if ($total_repairs > 0): ?>
                         <?php 
-                        // Get repair history
                         $sql_repair_history = "SELECT sr.kode_service, sr.nama_service, sp.status, sp.created_at 
                                              FROM ServiceRequest sr
                                              JOIN ServiceProgress sp ON sr.id_service = sp.id_service
                                              WHERE sr.id_customer = ?
-                                             ORDER BY sp.created_at DESC LIMIT 3";
+                                             ORDER BY sp.created_at DESC LIMIT 5";
                         $stmt_repair_history = $conn->prepare($sql_repair_history);
                         $stmt_repair_history->bind_param("i", $id_customer);
                         $stmt_repair_history->execute();
@@ -252,26 +278,30 @@ include '../includes/header.php';
                         if ($repair_history->num_rows > 0):
                             while ($log = $repair_history->fetch_assoc()):
                         ?>
-                        <div class="border border-slate-200 rounded-lg p-4">
+                        <div class="border border-slate-200 rounded-lg p-2.5">
                             <div class="flex justify-between items-start">
-                                <div>
-                                    <h5 class="font-semibold text-slate-800"><?= htmlspecialchars($log['nama_service']) ?></h5>
+                                <div class="flex-1">
+                                    <h5 class="font-semibold text-slate-800 text-sm truncate"><?= htmlspecialchars($log['nama_service']) ?></h5>
                                     <p class="text-xs text-slate-500"><?= htmlspecialchars($log['kode_service']) ?></p>
                                 </div>
-                                <span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-100 text-blue-800">
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 ml-2 flex-shrink-0">
                                     <?= ucfirst(str_replace('_', ' ', $log['status'])) ?>
                                 </span>
                             </div>
-                            <p class="text-xs text-slate-500 mt-2"><?= formatDate($log['created_at']) ?></p>
+                            <p class="text-xs text-slate-400 mt-1.5"><?= formatDate($log['created_at']) ?></p>
                         </div>
                         <?php 
                             endwhile;
                         else:
                         ?>
-                        <p class="text-slate-500 text-center py-8">Belum ada riwayat perbaikan.</p>
+                        <div class="flex items-center justify-center h-full">
+                            <p class="text-slate-500 text-sm text-center">Belum ada riwayat perbaikan.</p>
+                        </div>
                         <?php endif; ?>
                     <?php else: ?>
-                        <p class="text-slate-500 text-center py-8">Belum ada riwayat perbaikan.</p>
+                        <div class="flex items-center justify-center h-full">
+                            <p class="text-slate-500 text-sm text-center">Belum ada riwayat perbaikan.</p>
+                        </div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -299,73 +329,101 @@ include '../includes/header.php';
                     <?php 
                     mysqli_data_seek($transactions, 0); 
                     $counter = 1;
-                    while ($transaction = $transactions->fetch_assoc()): 
-                        // Get transaction details
-                        $transaction_details = [];
-                        if ($transaction['jenis_transaksi'] == 'barang') {
-                            $sql_details = "SELECT p.nama_product 
-                                           FROM TransactionProductDetail tpd
-                                           JOIN Product p ON tpd.id_product = p.id_product
-                                           WHERE tpd.id_transaction = ?";
-                        } else {
-                            $sql_details = "SELECT sr.nama_service 
-                                           FROM TransactionServiceDetail tsd
-                                           JOIN ServiceRequest sr ON tsd.id_service = sr.id_service
-                                           WHERE tsd.id_transaction = ?";
-                        }
-                        $stmt_details = $conn->prepare($sql_details);
-                        $stmt_details->bind_param("i", $transaction['id_transaction']);
-                        $stmt_details->execute();
-                        $transaction_details = $stmt_details->get_result()->fetch_all(MYSQLI_ASSOC);
-                    ?>
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="px-4 py-3 text-slate-700"><?= $counter++ ?></td>
-                        <td class="px-4 py-3 text-slate-900"><?= formatDate($transaction['tanggal_transaksi']) ?></td>
-                        <td class="px-4 py-3">
-                            <span class="font-mono text-slate-700">TRX-<?= str_pad($transaction['id_transaction'], 6, '0', STR_PAD_LEFT) ?></span>
-                        </td>
-                        <td class="px-4 py-3 text-slate-900"><?= htmlspecialchars($transaction['jenis']) ?></td>
-                        <td class="px-4 py-3 text-slate-900">
-                            <div class="line-clamp-2">
-                                <?php 
-                                if (!empty($transaction_details)) {
-                                    $items = array_column($transaction_details, $transaction['jenis_transaksi'] == 'barang' ? 'nama_product' : 'nama_service');
-                                    echo htmlspecialchars(implode(', ', $items));
-                                } else {
-                                    echo '-';
+                    if ($transactions->num_rows > 0):
+                        while ($transaction = $transactions->fetch_assoc()): 
+                            $item_names = [];
+                            if ($transaction['jenis_transaksi'] == 'barang') {
+                                $sql_details = "SELECT p.nama_product 
+                                               FROM TransactionProductDetail tpd
+                                               JOIN Product p ON tpd.id_product = p.id_product
+                                               WHERE tpd.id_transaction = ?";
+                                $stmt_details = $conn->prepare($sql_details);
+                                $stmt_details->bind_param("i", $transaction['id_transaction']);
+                                $stmt_details->execute();
+                                $details_result = $stmt_details->get_result();
+                                while($row = $details_result->fetch_assoc()){
+                                    $item_names[] = $row['nama_product'];
                                 }
-                                ?>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-slate-900"><?= formatCurrency($transaction['total_harga']) ?></td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?= $transaction['status_pembayaran'] == 'lunas' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
-                                <?= $transaction['status_pembayaran'] == 'lunas' ? 'Lunas' : 'Belum Bayar' ?>
-                            </span>
-                        </td>
-                        <td class="px-4 py-3">
-                            <button onclick="viewInvoice('<?= $transaction['id_transaction'] ?>')" 
-                                    class="text-blue-600 hover:text-blue-800 flex items-center">
-                                <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
-                                Invoice
-                            </button>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
+                            } else { // jenis_transaksi == 'jasa'
+                                $sql_details = "SELECT sr.nama_service 
+                                               FROM TransactionServiceDetail tsd
+                                               JOIN ServiceRequest sr ON tsd.id_service = sr.id_service
+                                               WHERE tsd.id_transaction = ?";
+                                $stmt_details = $conn->prepare($sql_details);
+                                $stmt_details->bind_param("i", $transaction['id_transaction']);
+                                $stmt_details->execute();
+                                $details_result = $stmt_details->get_result();
+                                while($row = $details_result->fetch_assoc()){
+                                    $item_names[] = $row['nama_service'];
+                                }
+                            }
+                        ?>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 text-slate-700"><?= $counter++ ?></td>
+                            <td class="px-4 py-3 text-slate-900"><?= formatDate($transaction['tanggal_transaksi']) ?></td>
+                            <td class="px-4 py-3">
+                                <span class="font-mono text-slate-700">TRX-<?= str_pad($transaction['id_transaction'], 6, '0', STR_PAD_LEFT) ?></span>
+                            </td>
+                            <td class="px-4 py-3 text-slate-900"><?= htmlspecialchars($transaction['jenis']) ?></td>
+                            <td class="px-4 py-3 text-slate-900">
+                                <div class="line-clamp-2">
+                                    <?= !empty($item_names) ? htmlspecialchars(implode(', ', $item_names)) : '-' ?>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-slate-900"><?= formatCurrency($transaction['total_harga']) ?></td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium <?= $transaction['status_pembayaran'] == 'lunas' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' ?>">
+                                    <?= $transaction['status_pembayaran'] == 'lunas' ? 'Lunas' : 'Belum Bayar' ?>
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <button onclick="viewInvoice('<?= $transaction['id_transaction'] ?>')" 
+                                        class="text-blue-600 hover:text-blue-800 flex items-center">
+                                    <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
+                                    Invoice
+                                </button>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8">
+                                <div class="text-center py-12">
+                                    <i data-lucide="shopping-cart" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
+                                    <h3 class="text-lg font-semibold text-slate-900 mb-2">Belum Ada Transaksi</h3>
+                                    <p class="text-slate-500">Anda belum melakukan transaksi apapun.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
-            
-            <?php if ($transactions->num_rows == 0): ?>
-            <div class="text-center py-12">
-                <i data-lucide="shopping-cart" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
-                <h3 class="text-lg font-semibold text-slate-900 mb-2">Belum Ada Transaksi</h3>
-                <p class="text-slate-500">Anda belum melakukan transaksi apapun.</p>
-            </div>
-            <?php endif; ?>
         </div>
     </div>
 
 </div>
+
+<style>
+    .progress-step .progress-step-circle {
+        width: 2.5rem; height: 2.5rem;
+        border-radius: 9999px; display: flex;
+        align-items: center; justify-content: center;
+        margin: 0 auto; transition: all 0.3s ease;
+        border: 2px solid;
+    }
+    .progress-step .progress-step-line {
+        position: absolute; top: 1.25rem;
+        left: 50%; width: 100%;
+        height: 2px; transform: translateY(-50%);
+        z-index: -1; transition: all 0.3s ease;
+    }
+    .progress-step.pending .progress-step-circle { background-color: #F1F5F9; border-color: #CBD5E1; color: #64748B; }
+    .progress-step.pending .progress-step-line { background-color: #CBD5E1; }
+    .progress-step.active .progress-step-circle { background-color: #DBEAFE; border-color: #3B82F6; color: #3B82F6; }
+    .progress-step.active ~ .progress-step .progress-step-line { background-color: #CBD5E1; }
+    .progress-step.completed .progress-step-circle { background-color: #22C55E; border-color: #22C55E; color: white; }
+    .progress-step.completed .progress-step-line { background-color: #22C55E; }
+</style>
 
 <script>
     function viewInvoice(transactionId) {
@@ -381,21 +439,22 @@ include '../includes/header.php';
                 if (!response.ok) throw new Error(`Gagal memuat invoice. Status: ${response.status}`);
                 return response.text();
             })
-            .then(html => { modalBody.innerHTML = html; })
+            .then(html => { 
+                modalBody.innerHTML = html; 
+                if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+            })
             .catch(error => { modalBody.innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">${error.message}</div>`; });
     }
 
     function closeInvoiceModal() {
-        const modal = document.getElementById('invoiceModal');
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
+        document.getElementById('invoiceModal').classList.add('hidden');
     }
 
     function printInvoice() {
         const content = document.getElementById('invoiceModalBody').innerHTML;
         const win = window.open('', '', 'height=700,width=900');
         win.document.write('<html><head><title>Cetak Invoice</title>');
-        win.document.write('<script src="https://cdn.tailwindcss.com"></' + 'script>');
+        win.document.write('<script src="https://cdn.tailwindcss.com"><\/script>');
         win.document.write('<style>body { padding: 20px; font-family: Arial, sans-serif; } @media print { .no-print { display: none !important; } }</style>');
         win.document.write('</head><body>' + content + '</body></html>');
         win.document.close();
@@ -403,6 +462,25 @@ include '../includes/header.php';
             win.focus();
             win.print();
         });
+    }
+
+    function showPromoDetails(event, title, description, code) {
+        event.preventDefault();
+        document.getElementById('promoModalTitle').textContent = title;
+        let bodyHtml = `<p class="text-slate-600 mb-4">${description}</p>`;
+        if (code && code !== 'null') {
+            bodyHtml += `<div class="bg-blue-50 border border-blue-200 rounded p-3 text-center">
+                            <p class="text-sm text-slate-600 mb-1">Gunakan Kode Promo:</p>
+                            <p class="text-lg font-bold text-blue-800 tracking-widest">${code}</p>
+                         </div>`;
+        }
+        document.getElementById('promoModalBody').innerHTML = bodyHtml;
+        document.getElementById('promoDetailModal').classList.remove('hidden');
+        document.getElementById('promoDetailModal').classList.add('flex');
+    }
+
+    function closePromoDetailModal() {
+        document.getElementById('promoDetailModal').classList.add('hidden');
     }
 
     // Initialize Lucide icons
