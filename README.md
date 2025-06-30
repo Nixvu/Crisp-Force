@@ -34,28 +34,22 @@ Jika sudah terpenuhi masuk ke proses Installasi
   5. setelah database dibuat lakukan import database 
      yang berada pada folder  "Crisp Force\include\database.sql"
 ```
+## Informasi Akun
+Daftar akun yang dapat digunakan di project ini.
+| Roles   |      Email      |  Password |
+|:----------:|:-------------:|:------:|
+| Admin |  admin@crispforce.com | admin123 |
+| Customer |    user@crispforce.com   |   user123 |
+| Sales | sales@crispforce.com |    sales123 |
+| Marketing | info@crispforce.com |    marketing123 |
+
+**Untuk roles Sales & Marketing belum dapat login, untuk sementara hanya bisa admin & customer.
 
 
 ## Screenshots
 
 ![Crisp Force](assets/images/app.png)
 
-## Akun Roles
-Admin
-admin@crispforce.com
-admin123
-
-Customer
-user@crispforce.com
-user123
-
-Sales
-sales@crispforce.com
-sales123
-
-Marketing
-info@crispforce.com
-marketing123
 
 ## Demo
 
