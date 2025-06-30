@@ -38,7 +38,7 @@ Jika sudah terpenuhi masuk ke proses Installasi
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![App Screenshot](https://github.com/Nixvu/Crisp-Force/blob/main/assets/images/app.png)
 
 
 ## Demo
