@@ -99,6 +99,10 @@ function getStatusBadgeClass($status)
             <div class="bg-white rounded-xl shadow-sm overflow-hidden">
                 <div class="p-4 flex justify-between items-center bg-slate-50 border-b border-slate-200">
                     <h3 class="text-lg font-semibold text-slate-700">Daftar Semua Kampanye</h3>
+                    <div class="relative w-64">
+                        <i data-lucide="search" class="h-4 w-4 text-slate-400 absolute top-1/2 left-3 -translate-y-1/2"></i>
+                        <input type="text" id="all-campaign-search" class="w-full pl-10 pr-3 py-2 border border-slate-300 rounded-md sm:text-sm" placeholder="Cari kampanye...">
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-slate-200">
@@ -124,7 +128,9 @@ function getStatusBadgeClass($status)
                                         <td class="px-6 py-4 text-sm text-slate-500"><?= htmlspecialchars($c['marketing_name']) ?></td>
                                         <td class="px-6 py-4 text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <?= getStatusBadgeClass($c['status']) ?>"><?= ucfirst(str_replace('_', ' ', $c['status'])) ?></span></td>
                                         <td class="px-6 py-4 text-center text-sm">
-                                            <button onclick='viewCampaign(<?= htmlspecialchars(json_encode($c), ENT_QUOTES, 'UTF-8') ?>)' class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><i data-lucide="eye" class="w-4 h-4"></i></button>
+                                            <button onclick='reviewCampaign(<?= htmlspecialchars(json_encode($a), ENT_QUOTES, 'UTF-8') ?>)' class="inline-flex items-center p-2 border border-transparent rounded-full shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none" title="Review Kampanye">
+                                                <i data-lucide="search-check" class="w-4 h-4"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php endwhile;
