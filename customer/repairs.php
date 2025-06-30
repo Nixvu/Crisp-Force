@@ -48,9 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_repair'])) {
     $deskripsi = sanitize($_POST['deskripsi']);
 
     // Generate service code
-    function generateServiceCode($conn) {
+    function generateServiceCode($conn)
+    {
         $code = '';
-        
+
         // Layer 1: Panggil stored procedure
         try {
             $stmt = $conn->prepare("CALL generate_service_code(?)");
@@ -58,32 +59,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit_repair'])) {
             $stmt->execute();
             $stmt->close();
         } catch (Exception $e) {
-            error_log("Procedure Error: ".$e->getMessage());
+            error_log("Procedure Error: " . $e->getMessage());
         }
-        
+
         // Layer 2: Generate manual jika procedure gagal
         if (empty($code)) {
-            $code = 'SRV'.date('YmdHis').rand(100,999);
-            error_log("Used Layer 2 Fallback: ".$code);
+            $code = 'SRV' . date('YmdHis') . rand(100, 999);
+            error_log("Used Layer 2 Fallback: " . $code);
         }
-        
+
         // Layer 3: Pastikan unik
         $is_unique = false;
         $retry = 0;
-        
+
         while (!$is_unique && $retry < 3) {
             $check = $conn->prepare("SELECT id_service FROM ServiceRequest WHERE kode_service = ?");
             $check->bind_param("s", $code);
             $check->execute();
-            
+
             if ($check->get_result()->num_rows === 0) {
                 $is_unique = true;
             } else {
-                $code = 'SRV'.uniqid();
+                $code = 'SRV' . uniqid();
                 $retry++;
             }
         }
-        
+
         return $code;
     }
 
@@ -144,7 +145,8 @@ include '../includes/header.php';
     <div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg mb-6">
         <div class="flex items-center">
             <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
-            <?php echo $_SESSION['success_message']; unset($_SESSION['success_message']); ?>
+            <?php echo $_SESSION['success_message'];
+            unset($_SESSION['success_message']); ?>
         </div>
     </div>
 <?php endif; ?>
@@ -153,7 +155,8 @@ include '../includes/header.php';
     <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg mb-6">
         <div class="flex items-center">
             <i data-lucide="alert-circle" class="w-5 h-5 mr-2"></i>
-            <?php echo $_SESSION['error_message']; unset($_SESSION['error_message']); ?>
+            <?php echo $_SESSION['error_message'];
+            unset($_SESSION['error_message']); ?>
         </div>
     </div>
 <?php endif; ?>
@@ -222,7 +225,7 @@ include '../includes/header.php';
                 $current_status = $latest_repair['progress_status'] ?? 'diterima_digerai';
                 $current_progress = $status_steps[$current_status][1];
                 ?>
-                
+
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-sm font-semibold text-slate-700">Progres Perbaikan</span>
                     <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
@@ -246,11 +249,11 @@ include '../includes/header.php';
             <form method="POST">
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="flex-1">
-                        <input type="text" name="service_code" placeholder="Masukkan Kode Service" 
-                               class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" name="service_code" placeholder="Masukkan Kode Service"
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
-                    <button type="submit" name="track_repair" 
-                            class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <button type="submit" name="track_repair"
+                        class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
                         <i data-lucide="search" class="w-5 h-5 mr-2"></i>
                         Lacak
                     </button>
@@ -276,15 +279,15 @@ include '../includes/header.php';
                             </span>
                         </div>
                     </div>
-                    
+
                     <div class="mb-6">
                         <p class="text-sm text-slate-500 mb-2">Deskripsi Kerusakan</p>
                         <p class="text-slate-700 bg-slate-50 p-4 rounded-lg"><?php echo $tracked_repair['deskripsi_kerusakan']; ?></p>
                     </div>
-                    
+
                     <div class="w-full bg-slate-200 rounded-full h-3">
-                        <div class="bg-blue-600 h-3 rounded-full transition-all duration-300" 
-                             style="width: <?php echo $status_steps[$tracked_repair['latest_status']][1]; ?>%"></div>
+                        <div class="bg-blue-600 h-3 rounded-full transition-all duration-300"
+                            style="width: <?php echo $status_steps[$tracked_repair['latest_status']][1]; ?>%"></div>
                     </div>
                 </div>
             <?php endif; ?>
@@ -301,8 +304,8 @@ include '../includes/header.php';
                 </div>
                 <h4 class="font-semibold text-slate-800 mb-2">Perbaikan Perangkat Anda</h4>
                 <p class="text-slate-500 mb-6">Ajukan permintaan perbaikan untuk perangkat Anda dengan mengisi form sederhana.</p>
-                <button onclick="showRepairModal()" 
-                        class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <button onclick="showRepairModal()"
+                    class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                     <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
                     Ajukan Perbaikan
                 </button>
@@ -328,44 +331,44 @@ include '../includes/header.php';
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
-                <?php 
-                mysqli_data_seek($repairs, 0); 
+                <?php
+                mysqli_data_seek($repairs, 0);
                 $counter = 1;
                 while ($repair = $repairs->fetch_assoc()): ?>
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-slate-700"><?php echo $counter++; ?></td>
-                    <td class="px-4 py-3">
-                        <span class="font-mono text-slate-700"><?php echo $repair['kode_service']; ?></span>
-                    </td>
-                    <td class="px-4 py-3 text-slate-900"><?php echo htmlspecialchars($repair['nama_service']); ?></td>
-                    <td class="px-4 py-3 text-slate-900">
-                        <div class="line-clamp-2"><?php echo htmlspecialchars($repair['deskripsi_kerusakan']); ?></div>
-                    </td>
-                    <td class="px-4 py-3 text-slate-900"><?php echo formatDate($repair['tanggal_masuk']); ?></td>
-                    <td class="px-4 py-3">
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            <?php echo $status_steps[$repair['latest_status']][0]; ?>
-                        </span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <button onclick="showInvoice('<?php echo $repair['kode_service']; ?>')" 
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-slate-700"><?php echo $counter++; ?></td>
+                        <td class="px-4 py-3">
+                            <span class="font-mono text-slate-700"><?php echo $repair['kode_service']; ?></span>
+                        </td>
+                        <td class="px-4 py-3 text-slate-900"><?php echo htmlspecialchars($repair['nama_service']); ?></td>
+                        <td class="px-4 py-3 text-slate-900">
+                            <div class="line-clamp-2"><?php echo htmlspecialchars($repair['deskripsi_kerusakan']); ?></div>
+                        </td>
+                        <td class="px-4 py-3 text-slate-900"><?php echo formatDate($repair['tanggal_masuk']); ?></td>
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                <?php echo $status_steps[$repair['latest_status']][0]; ?>
+                            </span>
+                        </td>
+                        <td class="px-4 py-3">
+                            <button onclick="showInvoice('<?php echo $repair['kode_service']; ?>')"
                                 class="text-blue-600 hover:text-blue-800 flex items-center">
-                            <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
-                            Invoice
-                        </button>
-                    </td>
-                </tr>
+                                <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
+                                Invoice
+                            </button>
+                        </td>
+                    </tr>
                 <?php endwhile; ?>
             </tbody>
         </table>
     </div>
-    
+
     <?php if ($repairs->num_rows == 0): ?>
-    <div class="text-center py-12">
-        <i data-lucide="wrench" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
-        <h3 class="text-lg font-semibold text-slate-900 mb-2">Belum Ada Riwayat Perbaikan</h3>
-        <p class="text-slate-500">Anda belum pernah mengajukan permintaan perbaikan.</p>
-    </div>
+        <div class="text-center py-12">
+            <i data-lucide="wrench" class="w-12 h-12 text-slate-400 mx-auto mb-4"></i>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">Belum Ada Riwayat Perbaikan</h3>
+            <p class="text-slate-500">Anda belum pernah mengajukan permintaan perbaikan.</p>
+        </div>
     <?php endif; ?>
 </div>
 
@@ -383,40 +386,40 @@ include '../includes/header.php';
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Merk</label>
-                            <input type="text" name="merk" required 
-                                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="merk" required
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Model</label>
-                            <input type="text" name="model" required 
-                                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="model" required
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Serial Number</label>
-                            <input type="text" name="serial_no" 
-                                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="serial_no"
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Kelengkapan</label>
-                            <input type="text" name="kelengkapan" placeholder="Charger, tas, dll" 
-                                   class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <input type="text" name="kelengkapan" placeholder="Charger, tas, dll"
+                                class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
-                    
+
                     <div class="mt-6">
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Deskripsi Kerusakan</label>
-                        <textarea name="deskripsi" rows="4" required 
-                                  class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                  placeholder="Jelaskan masalah yang dialami perangkat Anda..."></textarea>
+                        <textarea name="deskripsi" rows="4" required
+                            class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Jelaskan masalah yang dialami perangkat Anda..."></textarea>
                     </div>
-                    
+
                     <div class="mt-6 flex justify-end gap-3">
-                        <button type="button" onclick="hideRepairModal()" 
-                                class="bg-slate-200 text-slate-800 font-semibold px-6 py-3 rounded-lg hover:bg-slate-300 transition-colors">
+                        <button type="button" onclick="hideRepairModal()"
+                            class="bg-slate-200 text-slate-800 font-semibold px-6 py-3 rounded-lg hover:bg-slate-300 transition-colors">
                             Batal
                         </button>
-                        <button type="submit" name="submit_repair" 
-                                class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                        <button type="submit" name="submit_repair"
+                            class="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                             <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
                             Ajukan Perbaikan
                         </button>
@@ -441,18 +444,46 @@ include '../includes/header.php';
         document.getElementById('repairModal').classList.add('hidden');
     }
 
-    // Show invoice (placeholder function)
-    function showInvoice(serviceCode) {
-        alert('Menampilkan invoice untuk kode service: ' + serviceCode);
-        // You can implement actual invoice display logic here
-        // For example: window.open('invoice.php?code=' + serviceCode, '_blank');
+    // --- Repair Details Modal Functions ---
+    function viewRepairDetails(serviceId) {
+        const modal = document.getElementById('repairDetailModal');
+        const modalBody = document.getElementById('repairDetailModalBody');
+
+        modalBody.innerHTML = '<div class="text-center p-8"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div><p class="mt-4 text-slate-600">Memuat data...</p></div>';
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        fetch(`get_repair_details.php?id=${serviceId}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`Gagal memuat detail. Status: ${response.status}`);
+                return response.text();
+            })
+            .then(html => {
+                modalBody.innerHTML = html;
+                // Re-initialize lucide icons inside the modal content
+                lucide.createIcons();
+            })
+            .catch(error => {
+                modalBody.innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">${error.message}</div>`;
+            });
     }
+
+    function closeRepairDetailModal() {
+        const modal = document.getElementById('repairDetailModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
 
     // Close modal when clicking outside
     document.addEventListener('click', function(event) {
         const modal = document.getElementById('repairModal');
         if (event.target === modal) {
             hideRepairModal();
+        }
+        const detailModal = document.getElementById('repairDetailModal');
+        if (event.target === detailModal) {
+            closeRepairDetailModal();
         }
     });
 </script>

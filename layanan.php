@@ -186,16 +186,16 @@ $status_map = [
                                     <h4 class="font-semibold text-slate-800 mb-4">Riwayat Progres:</h4>
                                     <div class="space-y-4">
                                         <?php foreach (array_reverse($progress_history) as $progress): ?>
-                                            <div class="flex items-start bg-white p-4 rounded-lg">
-                                                <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 flex-shrink-0">
-                                                    <i data-lucide="<?= $status_map[$progress['status']][1] ?>" class="w-4 h-4"></i>
+                                            <div class="flex items-center bg-white p-4 rounded-lg">
+                                                <div class="bg-blue-100 text-blue-600 rounded-full p-2 mr-4 flex-shrink-0 flex items-center justify-center">
+                                                    <i data-lucide="<?= $status_map[$progress['status']][1] ?>" class="w-5 h-5"></i>
                                                 </div>
                                                 <div class="flex-1">
                                                     <div class="flex items-center justify-between mb-1">
                                                         <p class="font-semibold text-slate-800"><?= $status_map[$progress['status']][0] ?></p>
-                                                        <span class="text-slate-400 text-sm"><?= formatDate($progress['created_at']) ?></span>
+                                                        <span class="text-slate-400 text-xs"><?= formatDate($progress['created_at']) ?></span>
                                                     </div>
-                                                    <p class="text-slate-600"><?= !empty($progress['catatan']) ? htmlspecialchars($progress['catatan']) : 'Status diperbarui oleh sistem.' ?></p>
+                                                    <p class="text-slate-600 text-sm"><?= !empty($progress['catatan']) ? htmlspecialchars($progress['catatan']) : 'Status diperbarui oleh sistem.' ?></p>
                                                 </div>
                                             </div>
                                         <?php endforeach; ?>
