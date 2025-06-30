@@ -70,5 +70,26 @@
             });
         });
     </script>
+
+    <!-- Invoice Modal -->
+    <div id="invoiceModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" onclick="closeInvoiceModal()">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="p-4 sm:p-6 border-b flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-slate-800">Detail Invoice</h3>
+                <div class="flex items-center space-x-2">
+                    <button onclick="printInvoice()" class="text-slate-500 hover:text-blue-600 p-2 rounded-full transition-colors">
+                        <i data-lucide="printer" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="closeInvoiceModal()" class="text-slate-500 hover:text-red-600 p-2 rounded-full transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="invoiceModalBody" class="p-4 sm:p-6">
+                <!-- Invoice content will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

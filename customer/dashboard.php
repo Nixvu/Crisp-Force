@@ -137,7 +137,19 @@ include '../includes/header.php';
                 <h3 class="font-bold text-lg text-slate-800 mb-4">Status Perbaikan Terkini</h3>
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <div class="text-center">
-                        <img src="../assets/images/device-placeholder.png" class="w-24 h-24 mx-auto mb-3 rounded-lg object-cover">
+                        <?php
+                            $deviceImage = '../assets/images/device-placeholder.png.png'; // Default image
+                            if (isset($latest_repair['jenis_perangkat'])) {
+                                $deviceType = strtolower($latest_repair['jenis_perangkat']);
+                                $imagePath = '../assets/images/' . $deviceType . '.png';
+                                // Asumsi path absolut ke file untuk pengecekan
+                                $absoluteImagePath = realpath(__DIR__ . '/../assets/images/' . $deviceType . '.png');
+                                if ($absoluteImagePath && file_exists($absoluteImagePath)) {
+                                    $deviceImage = $imagePath;
+                                }
+                            }
+                        ?>
+                        <img src="<?= $deviceImage ?>" class="w-24 h-24 mx-auto mb-3 rounded-lg object-cover">
                         <h6 class="font-semibold"><?= htmlspecialchars($latest_repair['nama_service']) ?></h6>
                         <small class="text-slate-500">ID: <?= htmlspecialchars($latest_repair['kode_service']) ?></small>
                     </div>
