@@ -167,11 +167,21 @@ include '../includes/header.php';
         <h3 class="font-bold text-lg text-slate-800 mb-6">Status Perbaikan Terkini</h3>
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="text-center">
-                <div class="w-24 h-24 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="laptop" class="w-12 h-12 text-slate-600"></i>
-                </div>
-                <h6 class="font-semibold text-slate-800"><?php echo $latest_repair['nama_service']; ?></h6>
-                <small class="text-slate-500">ID: <?php echo $latest_repair['kode_service']; ?></small>
+                <?php
+                    $deviceImage = '../assets/images/device-placeholder.png.png'; // Default image
+                    if (isset($latest_repair['kategori_barang'])) {
+                        $deviceType = strtolower($latest_repair['kategori_barang']);
+                        $imagePath = '../assets/images/' . $deviceType . '.png';
+                        // Asumsi path absolut ke file untuk pengecekan
+                        $absoluteImagePath = realpath(__DIR__ . '/../assets/images/' . $deviceType . '.png');
+                        if ($absoluteImagePath && file_exists($absoluteImagePath)) {
+                            $deviceImage = $imagePath;
+                        }
+                    }
+                ?>
+                <img src="<?= $deviceImage ?>" alt="Gambar Perangkat" class="w-24 h-24 bg-slate-100 rounded-xl object-cover mx-auto mb-4">
+                <h6 class="font-semibold text-slate-800"><?= htmlspecialchars($latest_repair['nama_service']) ?></h6>
+                <small class="text-slate-500">ID: <?= htmlspecialchars($latest_repair['kode_service']) ?></small>
             </div>
             <div class="lg:col-span-3">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -351,10 +361,10 @@ include '../includes/header.php';
                             </span>
                         </td>
                         <td class="px-4 py-3">
-                            <button onclick="showInvoice('<?php echo $repair['kode_service']; ?>')"
-                                class="text-blue-600 hover:text-blue-800 flex items-center">
-                                <i data-lucide="file-text" class="w-4 h-4 mr-1"></i>
-                                Invoice
+                            <button onclick="viewRepairDetails(<?= $repair['id_service'] ?>)"
+                                    class="text-blue-600 hover:text-blue-800 flex items-center text-sm">
+                                <i data-lucide="eye" class="w-4 h-4 mr-1"></i>
+                                Detail
                             </button>
                         </td>
                     </tr>
