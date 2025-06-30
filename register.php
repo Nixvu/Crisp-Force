@@ -92,8 +92,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <main class="flex-grow container mx-auto p-6 md:p-8 flex items-center justify-center">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden flex w-full max-w-5xl">
                 <div class="hidden md:block w-1/2 bg-slate-100 p-12 relative">
-                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/images/branding_image.jpg');"></div>
-                    <div class="relative z-10 flex flex-col items-center justify-center h-full bg-black bg-opacity-20 rounded-lg">
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('assets/images/branding_image.png');"></div>
+                    <div class="relative z-10 flex flex-col items-center justify-center h-full bg-black bg-opacity-0 rounded-lg">
                         <a href="index.php" class="flex items-center space-x-3">
                             <img src="assets/images/logowh.png" alt="CRISP FORCE Logo" class="h-12 w-auto">
                             <span class="text-3xl font-extrabold text-white">CRISP<br>FORCE</span>
