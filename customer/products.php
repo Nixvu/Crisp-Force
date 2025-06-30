@@ -36,36 +36,36 @@ include '../includes/header.php';
 
 <!-- Dynamic Campaign Banner/Carousel -->
 <?php if (!empty($active_campaigns)): ?>
-    <div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-8" id="campaign-banner-container">
-        <div class="flex transition-transform duration-500 ease-in-out" id="campaign-carousel-inner">
-            <?php foreach ($active_campaigns as $index => $campaign): ?>
-                <div class="campaign-slide flex-shrink-0 w-full p-6 text-white" data-index="<?= $index ?>">
-                    <div class="flex flex-col md:flex-row items-center justify-between">
-                        <div class="md:w-2/3 text-center md:text-left mb-4 md:mb-0">
-                            <h3 class="text-2xl font-bold mb-2"><?= htmlspecialchars($campaign['nama_kampanye']) ?></h3>
-                            <p class="text-blue-100 mb-4"><?= htmlspecialchars($campaign['deskripsi']) ?></p>
-                            <?php if ($campaign['kode_promo']): ?>
-                                <div class="flex items-center justify-center md:justify-start">
-                                    <span class="text-blue-100 mr-2">Gunakan kode:</span>
-                                    <span class="bg-white text-blue-600 font-bold px-3 py-1 rounded-lg"><?= htmlspecialchars($campaign['kode_promo']) ?></span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="md:w-1/3 text-center">
-                            <i data-lucide="gift" class="w-16 h-16 text-blue-200 mx-auto"></i>
-                        </div>
+<div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-8" id="campaign-banner-container">
+    <div class="flex transition-transform duration-500 ease-in-out" id="campaign-carousel-inner">
+        <?php foreach ($active_campaigns as $index => $campaign): ?>
+        <div class="campaign-slide flex-shrink-0 w-full p-6 text-white bg-slate-800" data-index="<?= $index ?>">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/3 text-center md:text-left mb-4 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2"><?= htmlspecialchars($campaign['nama_kampanye']) ?></h3>
+                    <p class="text-slate-200 mb-4"><?= htmlspecialchars($campaign['deskripsi']) ?></p>
+                    <?php if ($campaign['kode_promo']): ?>
+                    <div class="flex items-center justify-center md:justify-start">
+                        <span class="text-slate-200 mr-2">Gunakan kode:</span>
+                        <span class="bg-white text-slate-800 font-bold px-3 py-1 rounded-lg"><?= htmlspecialchars($campaign['kode_promo']) ?></span>
                     </div>
+                    <?php endif; ?>
                 </div>
-            <?php endforeach; ?>
-        </div>
-        <?php if (count($active_campaigns) > 1): ?>
-            <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2" id="carousel-indicators">
-                <?php foreach ($active_campaigns as $index => $campaign): ?>
-                    <button class="w-3 h-3 bg-white rounded-full opacity-50 focus:outline-none transition-opacity duration-300" data-slide-to="<?= $index ?>"></button>
-                <?php endforeach; ?>
+                <div class="md:w-1/3 text-center">
+                    <i data-lucide="gift" class="w-16 h-16 text-slate-300 mx-auto"></i>
+                </div>
             </div>
-        <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
     </div>
+    <?php if (count($active_campaigns) > 1): ?>
+    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2" id="carousel-indicators">
+        <?php foreach ($active_campaigns as $index => $campaign): ?>
+        <button class="w-3 h-3 bg-white rounded-full opacity-50 focus:outline-none transition-opacity duration-300" data-slide-to="<?= $index ?>"></button>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+</div>
 <?php endif; ?>
 
 <!-- Products Grid -->
