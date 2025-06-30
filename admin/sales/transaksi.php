@@ -147,6 +147,8 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
                             <form action="../actions/proses_transaksi.php" method="POST" id="transactionForm">
                                 <input type="hidden" name="action" value="add">
 
+                                <input type="hidden" name="jenis_transaksi" id="jenis_transaksi_input" value="barang">
+
                                 <div class="mb-4">
                                     <label class="block text-sm font-medium text-slate-700 mb-1">Jenis Transaksi</label>
                                     <div class="flex space-x-2">
@@ -296,6 +298,7 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
         addProductItem(); // Add first item by default
         switchTab('product'); // Reset to product tab
         document.getElementById('transactionModal').classList.remove('hidden');
+        document.getElementById('jenis_transaksi_input').value = tab === 'product' ? 'barang' : 'service';
     }
 
     // Close modal
@@ -305,7 +308,7 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
 
     // Switch between tabs
     function switchTab(tab) {
-        
+
         const isProduct = tab === 'product';
         document.getElementById('product-fields').classList.toggle('hidden', !isProduct);
         document.getElementById('service-fields').classList.toggle('hidden', isProduct);
@@ -315,7 +318,7 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
         document.getElementById('productTabBtn').classList.toggle('bg-blue-500', !isProduct);
         document.getElementById('serviceTabBtn').classList.toggle('bg-purple-600', !isProduct);
         document.getElementById('serviceTabBtn').classList.toggle('bg-purple-500', isProduct);
-        
+
     }
 
     // Add product item
@@ -441,52 +444,52 @@ $teknisi = $conn->query("SELECT id_user, nama_lengkap FROM User WHERE role IN ('
 </html>
 `);
 
-printWindow.document.close();
+        printWindow.document.close();
 
-// Tunggu sampai konten selesai dimuat sebelum mencetak
-printWindow.onload = function() {
-printWindow.focus();
-printWindow.print();
-};
-}
+        // Tunggu sampai konten selesai dimuat sebelum mencetak
+        printWindow.onload = function() {
+            printWindow.focus();
+            printWindow.print();
+        };
+    }
 
-// Search functionality
-document.getElementById('transaction-search').addEventListener('input', function(e) {
-const searchTerm = e.target.value.toLowerCase();
-const rows = document.querySelectorAll('#transaction-table-body tr');
+    // Search functionality
+    document.getElementById('transaction-search').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('#transaction-table-body tr');
 
-rows.forEach(row => {
-const text = row.textContent.toLowerCase();
-row.style.display = text.includes(searchTerm) ? '' : 'none';
-});
-});
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
 
-// Status filter
-document.getElementById('status-filter').addEventListener('change', function(e) {
-const status = e.target.value;
-const rows = document.querySelectorAll('#transaction-table-body tr');
+    // Status filter
+    document.getElementById('status-filter').addEventListener('change', function(e) {
+        const status = e.target.value;
+        const rows = document.querySelectorAll('#transaction-table-body tr');
 
-rows.forEach(row => {
-if (status === '') {
-row.style.display = '';
-} else {
-const rowStatus = row.getAttribute('data-status');
-row.style.display = rowStatus === status ? '' : 'none';
-}
-});
-});
+        rows.forEach(row => {
+            if (status === '') {
+                row.style.display = '';
+            } else {
+                const rowStatus = row.getAttribute('data-status');
+                row.style.display = rowStatus === status ? '' : 'none';
+            }
+        });
+    });
 
-// Close modal when clicking outside
-document.querySelectorAll('[id$="Modal"]').forEach(modal => {
-modal.addEventListener('click', function(e) {
-if (e.target === this) {
-this.classList.add('hidden');
-}
-});
-});
+    // Close modal when clicking outside
+    document.querySelectorAll('[id$="Modal"]').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.add('hidden');
+            }
+        });
+    });
 
-// Initialize add product button
-document.getElementById('addProductItemBtn').addEventListener('click', addProductItem);
+    // Initialize add product button
+    document.getElementById('addProductItemBtn').addEventListener('click', addProductItem);
 </script>
 
 <?php include '../../includes/footer.php'; ?>

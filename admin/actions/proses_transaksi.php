@@ -17,7 +17,14 @@ if ($action == 'add' && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $id_customer = null;
         $guest_name = null;
 
-        $jenis_transaksi = isset($_POST['jenis_transaksi_produk']) ? 'barang' : 'service';
+        // Pastikan input jenis_transaksi ada dan valid
+        if (!isset($_POST['jenis_transaksi']) || !in_array($_POST['jenis_transaksi'], ['barang', 'service'])) {
+            $conn->rollback(); // Hentikan transaksi database jika ada
+            $_SESSION['error_message'] = "Jenis transaksi tidak valid atau tidak terkirim.";
+            header("Location: ../sales/transaksi.php");
+            exit();
+        }
+        $jenis_transaksi = sanitize($_POST['jenis_transaksi']);
 
         if ($jenis_transaksi == 'barang') {
             // Logic for Product Transaction
@@ -52,7 +59,7 @@ if ($action == 'add' && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // 1. Insert ke Transaction
             $stmt_trx = $conn->prepare("INSERT INTO Transaction (id_customer, guest_name, id_sales, jenis_transaksi, tanggal_transaksi, total_harga, status_pembayaran, metode_bayar, metode_pengambilan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'ambil_sendiri')");
-            $stmt_trx->bind_param("isisdsss", $id_customer, $guest_name, $id_sales, $jenis_transaksi, $tanggal_transaksi, $total_harga, $status_pembayaran, $metode_bayar);
+            $stmt_trx->bind_param("isissdss", $id_customer, $guest_name, $id_sales, $jenis_transaksi, $tanggal_transaksi, $total_harga, $status_pembayaran, $metode_bayar);
             $stmt_trx->execute();
             $id_transaction = $stmt_trx->insert_id;
 
