@@ -8,7 +8,6 @@ checkRole(['Admin']);
 $action = $_REQUEST['action'] ?? '';
 
 if ($action == 'add' && $_SERVER['REQUEST_METHOD'] == 'POST') {
-
     $conn->begin_transaction();
     try {
         $id_sales = $_SESSION['user_id'];
@@ -111,7 +110,6 @@ if ($action == 'add' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     header("Location: ../sales/transaksi.php");
     exit();
 }
-
 
 if ($action == 'delete' && isset($_GET['id'])) {
     $id_transaction = (int)$_GET['id'];
