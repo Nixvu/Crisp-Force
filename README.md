@@ -29,7 +29,9 @@ Jika sudah terpenuhi masuk ke proses Installasi
       Dir : Laragon\www\ 
       Dir : XAMPP\htdocs\
       Dir : Wampp\wwww\
-  3. Login ke ke phpmyadmin (mysql) dan lakukan import database 
+  3. Login ke ke phpmyadmin 
+  4. Buat Database Baru crisp_force
+  5. setelah database dibuat lakukan import database 
      yang berada pada folder  "Crisp Force\include\database.sql"
 ```
 
