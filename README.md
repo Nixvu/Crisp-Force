@@ -7,9 +7,9 @@ Crisp Force adalah sebuah project sederhana yang berfokus pada penerapan crm ope
 
 **Front End** Tailwind css
 
-**Back End:** PHP 
+**Back End:** PHP, MySQL
 
-**Tools** VSCode, Laragon,Figma, 
+**Tools** VSCode, Laragon, Figma, Draw.IO
 
 ## Installasi
 Sebelum melakukan Installasi, pastikan hal berikut telah terpenuhi
@@ -40,10 +40,25 @@ Jika sudah terpenuhi masuk ke proses Installasi
 
 ![Crisp Force](assets/images/app.png)
 
+## Akun Roles
+Admin
+admin@crispforce.com
+admin123
+
+Customer
+user@crispforce.com
+user123
+
+Sales
+sales@crispforce.com
+sales123
+
+Marketing
+info@crispforce.com
+marketing123
 
 ## Demo
 
-
 http://crisp-force.test/ (Laragon)
 
-http://localhost/crisp-force
+http://localhost:8080/crisp-force
